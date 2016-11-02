@@ -1,0 +1,53 @@
+/*
+ * 			$this->host=$config['host'];
+			$this->port=$config['port'];
+			$this->username=$config['username'];
+			$this->password=$config['password'];
+			$this->db = $config['db'];
+ * */
+//$mysql = new Mysql($db_w,$db_r,true);
+//$res=$mysql->getAll("farmtococ","code");
+//echo '<pre>';
+//print_r($res);
+//echo '</pre>';
+//$subs=array();
+//foreach ($res as $v){
+//	$sub=substr($v['code'],0,1);
+//	if(!in_array($sub,$subs)) {
+//		$subs[]=$sub;
+//	}
+//	$name="key_".$sub;
+	
+//	$arr=$$name;
+//	var_dump($arr);
+//if(empty($$name)) {
+//	$$name=array();
+//}
+//	array_push($$name, $v['code']);
+
+//	$arr[]=$v['code'];
+//	$$name=$arr;
+//}
+//$i=0;
+//foreach ($subs as $v){
+//	$name="key_".$v;
+//	$brr=$$name;
+//	$i+=count($brr);
+//	echo "<br>".count($brr);
+//	$str='<?php $'.$name.'=' . var_export($brr,true).' ?>';
+//	file_put_contents("auth_key_list_".$v.".php",$str,FILE_APPEND);
+//}
+//echo "ok";
+//echo $i;
+//echo count($res);
+//echo '<pre>';
+//print_r($subs);
+//echo '</pre>';
+
+//$mongo_config=array('host'=>"10.1.1.250","port"=>27017,"username"=>"","password"=>"","db"=>"local");
+//$mongodb=new MongoDbHelper($mongo_config);
+//$fetchurl=new SaeFetchurl();
+//$image = new SaeImage();
+//$mysql->setCharset('UTF8');
+
+

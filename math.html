@@ -1,0 +1,391 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+  <TITLE>数学测验</TITLE>
+<script >
+var qrange = 0;
+var qnumber = 0;
+var qtype = "addition_and_subtraction";
+var right = 0;
+var wrong = 0;
+var div_array = {"addition_and_subtraction":"加减法(初级)","addition_and_subtraction_2":"加减法(高级)","compare":"比大小(初级)","compare_2":"比大小(高级)"};//增加类型增加这里，然后div名字为key+"_div"
+
+//展示出题页面
+function showCreate(){
+	showdiv("create_div");
+	for (i in div_array){
+		var div_name = i+"_div"; 
+		hidediv(div_name);
+	}
+	hidediv("result_div");
+	fillQtype();
+}
+//写下拉框题目类型列表
+function fillQtype(){
+	qselect = document.getElementById("create_qtype");
+	var j = 0;
+	for (i in div_array){
+		qselect.options.add(new Option(div_array[i],i),j++);
+	}
+}
+
+//创建试卷
+function create_test(){
+		qrange = document.getElementById("create_range").value;
+		qnumber = document.getElementById("create_qnumber").value;
+		qtype = document.getElementById("create_qtype").value;
+		hidediv("create_div");
+		var div_name = qtype+"_div";
+		showdiv(div_name);
+		showdiv("result_div");
+		fillQuestion();
+		showResult();
+}
+
+function fillQuestion(){
+	if(qtype == "addition_and_subtraction"){
+		fillAdditionAndSubtraction();
+	}else if(qtype == "compare"){
+		fillCompare();
+	}else if(qtype == "addition_and_subtraction_2"){
+		fillAdditionAndSubtraction2();
+	}else if(qtype == "compare_2"){
+		fillCompare2();
+	}else{
+		alert("类型错误");
+		return false;
+	}
+}
+
+function submitEnter(){
+	if(qtype == "addition_and_subtraction"){
+		submitTest(); 
+	}else if(qtype == "compare"){
+	}else if(qtype == "addition_and_subtraction_2"){
+		submitTest2(); 
+	}else{
+	}
+}
+
+function fillCompare(){
+	var n1 = document.getElementById("compare_number_1");
+	var o = document.getElementById("compare_operator");
+	var n2 = document.getElementById("compare_number_2");
+	o.innerText = randNumber(qrange)%2==0 ? ">" : "<";
+	var num1 = randNumber(qrange);
+	var num2 = randNumber(qrange);
+	n1.innerText = num1;
+	n2.innerText = num2;
+}
+function fillCompare2(){
+	var n1 = document.getElementById("compare_number_1_2");
+	var o = document.getElementById("compare_operator_2");
+	var n2 = document.getElementById("compare_number_2_2");
+	o.innerText = randNumber(qrange)%2==0 ? ">" : "<";
+	var op1 = randNumber(100)%2==0 ? "+" : "-";
+	var op2 = randNumber(100)%2==0 ? "+" : "-";
+	var num1_1 = randNumber(qrange);
+	var num1_2 = randNumber(qrange);
+	var num2_1 = randNumber(qrange);
+	var num2_2 = randNumber(qrange);
+	if(eval(num1_1+op1+num1_2) < 0){
+		var num = num1_1;
+		num1_1 = num1_2;
+		num1_2 = num;
+	}
+	if(eval(num2_1+op2+num2_2) < 0){
+		var num = num2_1;
+		num2_1 = num2_2;
+		num2_2 = num;
+	}
+	n1.innerText = num1_1+op1+num1_2;
+	n2.innerText = num2_1+op2+num2_2;
+}
+function fillAdditionAndSubtraction(){
+	var n1 = document.getElementById("test_number_1");
+	var o = document.getElementById("test_operator");
+	var n2 = document.getElementById("test_number_2");
+	o.innerText = randNumber(100)%2==0 ? "+" : "-";
+	var num1 = randNumber(qrange);
+	var num2 = randNumber(qrange);
+	if(o.innerText == "-" && num1 < num2){
+		var num = num1;
+		num1 = num2;
+		num2 = num;
+	}
+	n1.innerText = num1;
+	n2.innerText = num2;
+	document.onkeydown = bindEnter;
+}
+function fillAdditionAndSubtraction2(){
+	var n1 = document.getElementById("test_number_1_2");
+	var o = document.getElementById("test_operator_2");
+	var n2 = document.getElementById("test_number_2_2");
+	var ans = document.getElementById("test_answer_2");
+	
+	n1.readOnly = true;
+	o.readOnly = true;
+	n2.readOnly = true;
+	ans.readOnly = true;
+	var operator = randNumber(100)%2==0 ? "+" : "-";
+	var num1 = randNumber(qrange);
+	var num2 = randNumber(qrange);
+	var answer = eval(num1+operator+num2);
+	
+	if(answer < 0){
+		var num = num1;
+		num1 = num2;
+		num2 = num;
+		answer = Math.abs(answer);
+	}
+	n1.value = num1;
+	n2.value = num2;
+	o.value = operator;
+	ans.value = answer;
+	var type = randNumber(4);
+	if(type == 1){
+		n1.value = "";
+		n1.readOnly = false;
+	}else if(type == 2){
+		n2.value = "";
+		n2.readOnly = false;
+	}else if(type == 3){
+		o.value = "";
+		o.readOnly = false;
+	}else{
+		ans.value = "";
+		ans.readOnly = false;
+	}
+	document.onkeydown = bindEnter;
+}
+
+
+function submitTest(){
+	var all_number = wrong + right;
+	if(all_number >= qnumber){
+		alert("测试已经完成，请检查结果，要开始新测试刷新网页！");
+		return false;
+	}
+	var n1 = document.getElementById("test_number_1").innerText;
+	var o = document.getElementById("test_operator").innerText;
+	var n2 = document.getElementById("test_number_2").innerText;
+	var answer = document.getElementById("test_answer").value;
+	if(answer == ""){
+		alert("输入答案再提交！");
+		return;
+	}
+	var str = n1+""+o+""+n2+""+"="+answer+"\n";
+	var right_answer = eval(n1+o+n2);
+	var is_right = answer == right_answer;
+	if(is_right){
+		right++;
+	}else{
+		wrong++;
+	}
+	showResult();
+	addLog(str,is_right);
+	var all_number = wrong + right;
+	if(all_number < qnumber){
+		fillQuestion();
+		document.getElementById("test_answer").value="";
+	}
+}
+
+function submitTest2(){
+	var all_number = wrong + right;
+	if(all_number >= qnumber){
+		alert("测试已经完成，请检查结果，要开始新测试刷新网页！");
+		return false;
+	}
+	var n1 = document.getElementById("test_number_1_2").value;
+	var o = document.getElementById("test_operator_2").value;
+	var n2 = document.getElementById("test_number_2_2").value;
+	var answer = document.getElementById("test_answer_2").value;
+	if(answer == "" || n1 == "" || o == "" || n2 == ""){
+		alert("输入答案再提交！");
+		return false;
+	}
+	var str = n1+""+o+""+n2+""+"="+answer+"\n";
+	var right_answer = eval(n1+o+n2);
+	var is_right = answer == right_answer;
+	if(is_right){
+		right++;
+	}else{
+		wrong++;
+	}
+	showResult();
+	addLog(str,is_right);
+	var all_number = wrong + right;
+	if(all_number < qnumber){
+		fillQuestion();
+	}
+}
+
+function submitCompare(answer){
+	var all_number = wrong + right;
+	if(all_number >= qnumber){
+		alert("测试已经完成，请检查结果，要开始新测试刷新网页！");
+		return false;
+	}
+	var n1 = document.getElementById("compare_number_1").innerText;
+	var o = document.getElementById("compare_operator").innerText;
+	var n2 = document.getElementById("compare_number_2").innerText;
+	var answer_text = answer ? " √": " ×" ;
+	var str = n1+""+o+""+n2+""+answer_text+"\n";
+	var right_answer = eval(n1+o+n2);
+	var is_right = answer == right_answer;
+	if(is_right){
+		right++;
+	}else{
+		wrong++;
+	}
+	showResult();
+	addLog(str,is_right);
+	var all_number = wrong + right;
+	if(all_number < qnumber){
+		fillQuestion();
+	}
+}
+
+function submitCompare2(answer){
+	var all_number = wrong + right;
+	if(all_number >= qnumber){
+		alert("测试已经完成，请检查结果，要开始新测试刷新网页！");
+		return false;
+	}
+	var n1 = document.getElementById("compare_number_1_2").innerText;
+	var o = document.getElementById("compare_operator_2").innerText;
+	var n2 = document.getElementById("compare_number_2_2").innerText;
+	var answer_text = answer ? " √": " ×" ;
+	var str = n1+""+o+""+n2+""+answer_text+"\n";
+	var right_answer = eval(n1+o+n2);
+	var is_right = answer == right_answer;
+	if(is_right){
+		right++;
+	}else{
+		wrong++;
+	}
+	showResult();
+	addLog(str,is_right);
+	var all_number = wrong + right;
+	if(all_number < qnumber){
+		fillQuestion();
+	}
+}
+//展示答题概况
+function showResult(){
+	document.getElementById("res_all").innerText = qnumber;
+	document.getElementById("res_right").innerText = right;
+	document.getElementById("res_wrong").innerText = wrong;
+}
+
+//增加答题日志
+function addLog(str,isRight){
+	var div_type = isRight == true ? "right_div":"wrong_div";
+	var s = document.getElementById(div_type).innerText;
+	s += str;
+	document.getElementById(div_type).innerText = s;
+}
+
+//显示div
+function showdiv(id){
+	var div = document.getElementById(id);
+	if(div == undefined || div == null){
+		return false;
+	}
+	div.style.display = "block";
+}
+//隐藏div
+function hidediv(id){
+	var div = document.getElementById(id);
+	div.style.display = "none";
+}
+//生成随机数
+function randNumber(limit){
+	return Math.floor(Math.random()*(limit-1)+1);
+}
+//监听回车
+function bindEnter(e) {    
+	// 兼容FF和IE和Opera    
+	var theEvent = e || window.event;    
+	var code = theEvent.keyCode || theEvent.which || theEvent.charCode;    
+	if (code == 13) {    
+		submitEnter();
+		return true;    
+	}    
+}  
+</script>
+ </HEAD>
+
+ <BODY onload="showCreate()" style="text-align:center;font-size:30px">
+	<div id="create_div" style="width:80%;height:100px;">	
+		请选择题目范围：<select id="create_range" style="font-size:30px">
+							<option value="10">10</option>
+							<option value="20" >20</option>
+							<option value="50" >50</option>
+							<option value="100" >100</option>
+						</select>
+						<br>
+		请选择题目数量：<select id="create_qnumber" style="font-size:30px">
+							<option value="10">10</option>
+							<option value="20" >20</option>
+							<option value="50" >50</option>
+							<option value="100" >100</option>
+						</select>
+						<br>
+		请选择题目类型：<select id="create_qtype" style="font-size:30px">
+
+						</select>
+						<br>
+		<input id="create_button" style="font-size:30px" type="button" value="创建试卷" onclick="create_test()">
+	</div>
+
+	<div id="addition_and_subtraction_div" style="width:80%;height:50px;">	
+		<span id="test_number_1" ></span>
+		<span id="test_operator" ></span>
+		<span id="test_number_2" ></span>
+		=
+		<input id="test_answer" type="text"  style="font-size:30px;width:10%" maxlength="10" />
+		<input id="test_submit_button"  style="font-size:30px" type="button" value="提交答案" onclick="submitTest()" />
+	</div>
+	<div id="addition_and_subtraction_2_div" style="width:80%;height:50px;">		
+		<input id="test_number_1_2" type="text"  style="font-size:30px;width:10%" maxlength="10" />
+		<input id="test_operator_2" type="text"  style="font-size:30px;width:10%" maxlength="10" />
+		<input id="test_number_2_2" type="text"  style="font-size:30px;width:10%" maxlength="10" />
+		=
+		<input id="test_answer_2" type="text"  style="font-size:30px;width:10%" maxlength="10" />
+		<input id="test_submit_button_2"  style="font-size:30px" type="button" value="提交答案" onclick="submitTest2()" />
+	</div>
+	<div id="compare_div" style="width:80%;height:50px;">
+		<span id="compare_number_1" ></span>
+		<span id="compare_operator" ></span>
+		<span id="compare_number_2" ></span>
+
+		<input id="compare_submit_button_right"  style="font-size:30px" type="button" value="&#8730;" onclick="submitCompare(true)" />
+		<input id="compare_submit_button_wrong"  style="font-size:30px" type="button" value="&#935;" onclick="submitCompare(false)" />
+	</div>
+	<div id="compare_2_div" style="width:80%;height:50px;">
+		<span id="compare_number_1_2" ></span>
+		<span id="compare_operator_2" ></span>
+		<span id="compare_number_2_2" ></span>
+
+		<input id="compare_submit_button_right_2"  style="font-size:30px" type="button" value="&#8730;" onclick="submitCompare2(true)" />
+		<input id="compare_submit_button_wrong_2"  style="font-size:30px" type="button" value="&#935;" onclick="submitCompare2(false)" />
+	</div>
+	<div id="result_div" style="width:80%;height:50px;">
+		<div style="font-size:30px">
+		总计：<span id="res_all" ></span>题，正确<span id="res_right" ></span>题，错误<span id="res_wrong" ></span>题。
+		</div>
+		<div id="wrong_div" style="background-color:red;width:20%;float:left;margin-left:30%;">答错记录：<br>
+		
+		</div>
+		<div id="right_div" style="background-color:#68EE68;width:20%;float:left;">答对记录：<br>
+		
+		</div>
+		<div>
+			<img src="Picture/math/math-bg.jpg"/>
+		</div>
+	</div>
+ </BODY>
+</HTML>

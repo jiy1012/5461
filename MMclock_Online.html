@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+  <TITLE> MMclock </TITLE>
+  <META NAME="Author" CONTENT="61">
+  <META NAME="Keywords" CONTENT="61">
+  <META NAME="Description" CONTENT="61">
+  <META CONTENT="text/html;charset=utf-8" http-equiv="Content-Type">
+  <SCRIPT SRC="http://lib.sinaapp.com/js/jquery/1.8.3/jquery.min.js"></SCRIPT>
+	<script type="text/javascript">
+		function MMclock(){
+			var myDate = new Date();
+			if (myDate.getHours()<10)
+			{
+				hour='0'+myDate.getHours()
+			}else{
+				hour=myDate.getHours();
+			}
+			if (myDate.getMinutes()<10)
+			{
+				minute='0'+myDate.getMinutes()
+			}else{
+				minute=myDate.getMinutes();
+			}
+			var name=hour+''+minute;
+			var url=IMAGE_URL+name+".jpg";
+			var old_url=$('#mm').attr('src');
+			if (old_url==url){
+				return;
+			}else{
+				$('#mm').attr('src',url);
+			}
+		}
+		function start(){
+			timer=setInterval("MMclock()",1000);
+		}
+	</script>
+	<script defer="true" type="text/javascript">
+	var timer;
+	var IMAGE_URL="http://d.mmclock.cn/pics/";
+	start();
+	</script>
+
+ </HEAD>
+
+ <BODY onload="MMclock();">
+<img id="mm" src=""/>
+<br>
+资源来自：<a href='http://www.mmclock.cn'>www.mmclock.cn</a><br>
+如果喜欢请访问：<a href='http://www.mmclock.cn'>www.mmclock.cn</a><br>
+本站不承担任何责任。
+ </BODY>
+</HTML>

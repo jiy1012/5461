@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+  <TITLE> Colorful Day </TITLE>
+  <META CONTENT="text/html;charset=utf-8" http-equiv="Content-Type">
+  <META NAME="Author" CONTENT="61">
+  <META NAME="Keywords" CONTENT="61">
+  <META NAME="Description" CONTENT="61">
+  <SCRIPT SRC="http://lib.sinaapp.com/js/jquery/1.8.3/jquery.min.js"></SCRIPT>
+  <SCRIPT>
+    var allArr = new Array();
+    var oldArr = new Array();
+    var change = new Array();
+	var first = true;
+	var line = 10;
+	var row = 10;
+	var button = 10;
+	var old = 0;
+	var clickNum = 0;
+	var allNum = 0;
+    function init(){
+		var s="";
+		for (var i=1;i<=line*row;i++)
+		{
+			if(i%row == 1){s += "<tr>";}
+			var va = Math.ceil(Math.random()*100)%6+1;
+			allArr[i]=va;
+			var id = i;
+			s+="<td width='20px' id='"+id+"'>"+va+"</td>";
+			if(i%row == 0){s+="</tr>";}
+//			$("#"+id).text(va);
+		}
+		$("#gamearea").html(s);
+		var b = "";
+		for(var i =1;i<=button;i++){
+			b+="<td><input type='button' name='"+i+"' value='"+i+"' onclick='clickbynum("+i+");'/></td>";
+		}
+		$("#buttonarea").html(b);
+		$("#resultarea").html("总步数:0");
+		oldArr = allArr;
+	}
+  
+  function clickbynum(num){
+	clickNum = num;
+	old = $("#1").text();
+	if (old == num){return ;}//按的数字与本来的相同
+	if(change.length == 0){
+		change[0] = 1;
+		console.log(" add "+1+" to change");
+		addToChange(old);
+	}
+	var haveAdd = addToChange(clickNum);
+	if(haveAdd == false){
+		return ;
+	}
+	var cnum = 0;
+	for(var c in change){
+		var n = parseInt(c)+1;
+		if($("#"+n).text() != clickNum){
+			console.log("change "+n+" to "+clickNum);
+			$("#"+n).text(clickNum);
+		}
+		cnum++;
+	}
+	allNum+=1;
+	$("#resultarea").html("总步数:"+allNum);
+	if(cnum >=line*row){
+		alert("恭喜过关!你一共用了"+allNum+"步,真是弱爆了啊。。。。");
+	}
+  }
+  function addToChange(withNum){
+//		for(i in allArr){
+		var haveAdd = false;
+		for(var i =1;i<=allArr.length;i++){
+			addnew = false;
+			addnew = checklrud(i,withNum);
+			if(addnew == true && change[i-1] != 1){
+				haveAdd = true;
+				change[i-1] = 1;
+				$("#"+i).text(clickNum);
+				console.log(" add "+i+" to change");
+			}
+		}
+		return haveAdd;
+//		}
+  }
+  /*	$can=array(-1,1,-$line,$line);
+	if($num<$line) unset($can[2]);
+	if($num>$line*($line-1)) unset($can[3]);
+	if($num%$line == 1 ) unset($can[0]);
+	if($num%$line == 0 ) unset($can[1]);
+	$k = array_rand($can);
+	return $num+$can[$k];*/
+  function checklrud(i,withNum){
+		var needup = true;
+		var needdown = true;
+		var needleft = true;
+		var needright = true;
+		if (i%row == 1){needleft = false;}
+		if (i%row == 0){needright = false;}
+		if (i<row){needup = false;}
+		if (i>row*(line-1)){needdown = false;}
+		var needAdd = false;
+		var c = i-1;
+		if (needup){ if(change[c-row] != undefined && $("#"+i).text() == withNum ) needAdd = true; }
+		if (needleft){if(change[c-1] != undefined && $("#"+i).text() == withNum ) needAdd = true; }
+		if (needright){if(change[c+1] != undefined && $("#"+i).text() == withNum ) needAdd = true; }
+		if (needdown){if(change[c+row] != undefined && $("#"+i).text() == withNum ) needAdd = true; }
+		return needAdd;
+  }
+
+  </SCRIPT>
+ </HEAD>
+
+ <BODY onload="init();">
+   <table>
+	<tr>
+	<td id="resultarea">
+
+	</td>
+	</tr>
+  </table>
+  <table id="gamearea">
+		
+  </table>
+  <table>
+    <tr id="buttonarea">
+
+	</tr>
+  </table>
+	<table>
+		<tr id="faq">
+			<td>
+					游戏规则：以左上角数字为基准，点击按钮可以将与左上角相邻的并且数字与左上角数字相同的数字都转变为点击的数字。<br>
+					当全部的数字都相同时，游戏过关。
+			</td>
+		</tr>
+	</table>
+ </BODY>
+</HTML>

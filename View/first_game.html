@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+  <TITLE>拼图游戏V1.0</TITLE>
+  <META charset="utf-8">
+   <script type="text/javascript" src = "http://lib.sinaapp.com/js/jquery/1.8.3/jquery.min.js"></script>
+   <script type="text/javascript" src = "Js/first_game.js"></script>
+   <script type="text/javascript">
+	   document.execCommand("BackgroundImageCache", false, true);
+   </script>
+   <style>
+   .select{ background:#000;filter:alpha(opacity=50);-moz-opacity:0.5;opacity: 0.5;}
+   </style>
+ </HEAD>
+ <BODY>
+<img id="src_img" src="####pic_src####" style="display:none"/> <br>
+<select id="line">
+    <option value="3">3X3</option>
+    <option value="4">4X4</option>
+    <option value="5">5X5</option>
+</select>
+ 计时器:<input id="timer" type="button" value="" disabled='true' style='width:60px'/>
+ <input id="button" type="button" value="载入图片" onclick="getimg()" />
+ <div style="clear:both;heihgt:100px;"></div>
+   <table id="board" border='2' cellspacing=0 cellpadding=0 style="margin:100px 0px 0px 0px;">
+		<tr>
+			<td id="td_00" onclick='playimg(0,0)'></td><td id="td_01" onclick='playimg(0,1)'></td>
+			<td id="td_02" onclick='playimg(0,2)'></td><td id="td_03" onclick='playimg(0,3)'></td>
+			<td id="td_04" onclick='playimg(0,4)'></td>
+		</tr>
+		<tr>
+			<td id="td_10" onclick='playimg(1,0)'></td><td id="td_11" onclick='playimg(1,1)'></td>
+			<td id="td_12" onclick='playimg(1,2)'></td><td id="td_13" onclick='playimg(1,3)'></td>
+			<td id="td_14" onclick='playimg(1,4)'></td>
+		</tr>
+		<tr>
+			<td id="td_20" onclick='playimg(2,0)'></td><td id="td_21" onclick='playimg(2,1)'></td>
+			<td id="td_22" onclick='playimg(2,2)'></td><td id="td_23" onclick='playimg(2,3)'></td>
+			<td id="td_24" onclick='playimg(2,4)'></td>
+		</tr>
+		<tr>
+			<td id="td_30" onclick='playimg(3,0)'></td><td id="td_31" onclick='playimg(3,1)'></td>
+			<td id="td_32" onclick='playimg(3,2)'></td><td id="td_33" onclick='playimg(3,3)'></td>
+			<td id="td_34" onclick='playimg(3,4)'></td>
+		</tr>
+		<tr>
+			<td id="td_40" onclick='playimg(4,0)'></td><td id="td_41" onclick='playimg(4,1)'></td>
+			<td id="td_42" onclick='playimg(4,2)'></td><td id="td_43" onclick='playimg(4,3)'></td>
+			<td id="td_44" onclick='playimg(4,4)'></td>
+		</tr>
+  </table>
+ </BODY>
+</HTML>
